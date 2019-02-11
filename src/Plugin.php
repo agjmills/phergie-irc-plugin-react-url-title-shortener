@@ -20,7 +20,11 @@ class Plugin extends AbstractPlugin {
         $message_parts = explode(' ' , $eventParams['text']);
         foreach ($message_parts as $message_part) {
             if (strpos($message_part, 'http://') === 0 || strpos($message_part, 'https://') ===0) {
-                $response = Zttp::get($message_part);
+                try {
+                    $response = Zttp::get($message_part);
+                } catch (\Throwable $exception) {
+                    return;
+                }
                 $body = $response->body();
                 preg_match("/<title>(.*?)<\/title>/", $body, $matches);
 
